@@ -25,6 +25,13 @@ int main(int argc, char** argv) {
     Display mainDisplay;
     int GUI_INIT_STATUS = mainDisplay.Init();
     cout << "GUI INIT EXIT CODE: " << GUI_INIT_STATUS << "\n";
+
+    vector<int> xs = {400, 600, 500};
+    vector<int> ys = {200, 200, 100};
+
+    vector<float> v = mainDisplay.PxToNDC_Tri(xs, ys);
+    mainDisplay.verts = &v[0];
+
     int GUI_SCENE_STATUS = mainDisplay.Scene();
     cout << "GUI SCENE EXIT CODE: " << GUI_SCENE_STATUS << "\n";
     
