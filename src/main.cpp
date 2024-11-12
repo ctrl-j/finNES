@@ -2,13 +2,21 @@
 #include <cstdint>
 
 #include "../include/display.hh"
-//#include "../include/ricoh_2a03.hh"
+#include "../include/ricoh_2a03.hh"
 //#include "../include/ppu.hh"
 
 using namespace std;
 
-//! Called when window is queued to close
-
+enum InfoStatus {
+    SUCCESS,
+    ERROR,
+    WARNING,
+    NULL_PTR,
+    INVALID_PARAM,
+    READ_ERROR,
+    WRITE_ERROR,
+    
+};
 
 int main(int argc, char** argv) {
     //? Init memory
@@ -16,6 +24,7 @@ int main(int argc, char** argv) {
     //? Load "cartridge" into ROM
 
     //? Init Ricoh 2A03 (CPU+APU)
+    Ricoh_2A03 CORE = new Ricoh_2A03();
 
     //? Init PPU
 

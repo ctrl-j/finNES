@@ -52,8 +52,6 @@ class Mixer : public APU {
 
         float OutputCompVolumes();
         vector<uint8_t> GetChannelVolumes(); //TODO
-        //? Mild lowpass filter (emulates RCA output circuitry)
-        void FilterAudio(float* audio_data); //TODO
 };
 
 class Pulse : public APU {
@@ -65,8 +63,20 @@ class Pulse : public APU {
     //!     -Timer (11-bit)
 
     public:
+        bool pulse_channel;
+        float duty;
+        uint8_t volume; // 4-bit value
+        uint8_t len_cnt;
+        uint16_t period; // 11-bit value
+
         Pulse();
         ~Pulse();
+
+        void SetVolume(uint8_t new_volume);
+        void SetRawPeriod(uint16_t raw_period);
+        void SetLenCntVal(uint8_t counter_val);
+        void SetDuty(float duty_cycle);
+        void SetSweep(uint8_t flags);
 };
 
 class Triangle : public APU {
@@ -75,8 +85,14 @@ class Triangle : public APU {
     //!     -Linear Counter (7-bit)
     //!     -Timer (11-bit)
     public: 
+        uint8_t len_cnt;
+        uint16_t period; // 11-bit value
+
         Triangle();
         ~Triangle();
+
+        void SetRawPeriod(uint16_t raw_period);
+        void SetLenCntVal(uint8_t counter_val);
 };
 
 class Noise : public APU {
@@ -85,8 +101,14 @@ class Noise : public APU {
     //!     -Envelope
     //!     -Length Counter (5-bit)
     public:
+        uint8_t volume; // 4-bit value
+        uint8_t len_cnt;
+
         Noise();
         ~Noise();
+
+        void SetVolume(uint8_t new_volume);
+        void SetLenCntVal(uint8_t counter_val);
 };
 
 class DMC : public APU {

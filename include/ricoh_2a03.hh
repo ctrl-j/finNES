@@ -93,6 +93,7 @@ private:
     uint8_t SND_CHN_REG;
     uint8_t JOY1_REG;
     uint8_t JOY2_REG;
+    
 public:
     Ricoh_2A03();
     ~Ricoh_2A03();

@@ -8,18 +8,26 @@
 * *///***********************************
 
 Ricoh_2A03::Ricoh_2A03() {
-
+    //? Init core object members
+    cpu = new CPU();
+    apu = new APU();
 }
 
 Ricoh_2A03::~Ricoh_2A03() {
-    
+    //? Destroy core object members
+    delete cpu;
+    delete apu;
 }
 
 APU::APU() {
-
+    //? Init APU object members
+    MXR = new Mixer();
+    FMCNT = new FrameCounter();
 }
 APU::~APU(){
-
+    //? Destroy APU object members
+    delete MXR;
+    delete FMCNT;
 }
 
 CPU::CPU() {
@@ -33,4 +41,10 @@ CPU::~CPU(){
 * Ricoh class core routines *
 * *///***********************
 
+uint8_t Ricoh_2A03::ReadReg() {
 
+}
+
+uint8_t Ricoh_2A03::WriteReg() {
+    
+}
