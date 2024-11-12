@@ -2,6 +2,12 @@
     "files.associations": {
         "cstdint": "cpp",
         "iostream": "cpp",
+<<<<<<< Updated upstream
         "vector": "cpp"
+=======
+        "iosfwd": "cpp",
+        "sstream": "cpp",
+        "fstream": "cpp"
+>>>>>>> Stashed changes
     }
 }

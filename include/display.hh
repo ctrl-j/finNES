@@ -11,12 +11,15 @@ public:
     int window_width;
     int window_height;
     unsigned int current_shader_program, current_vao, current_vbo;
+    
     float* verts;
+    int vertsN;
 
     Display();
     ~Display();
 
     int Init();
+    GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
     int Scene();
     void Render();
     void ProcessInput();
@@ -27,6 +30,8 @@ public:
     vector<float> PxToNDC_Tri(vector<int> x, vector<int> y);
 
 };
+
+
 
 //! !!!!!!!!!!!!!!!!!!!!!!!!!!
 //! GLFW Window Callbacks

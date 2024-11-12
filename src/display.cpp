@@ -2,8 +2,12 @@
 #include "../include/glad/glad.h"
 #include <GLFW/glfw3.h>
 
-#include <iostream>
 #include <cstdint>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <sstream>
+
 #include "../include/display.hh"
 
 using namespace std;
@@ -51,26 +55,15 @@ int Display::Init() {
     glfwSetWindowCloseCallback(window, window_close_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
 
+    //? Load shader sources, compile+link to shader program
+    LoadShaders((char*)"resource/vertex_shader.txt", (char*)"resource/fragment_shader.txt");
+
     return 0;
 }
 
 int Display::Scene() {
-    int success;
-    unsigned int vertexShader, fragmentShader, shaderProgram;
     unsigned int VBO, VAO;
     char infoLog[512];
-    const char *vertexShaderSource = "#version 400 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-        "}\0";
-    const char *fragmentShaderSource = "#version 330 core\n"
-        "out vec4 FragColor;\n"
-        "void main()\n"
-        "{\n"
-        "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-        "}\0";
 
     //? Generate Vertex Buffer Object, Vertex Array Object to store vertex attributes
     glGenBuffers(1, &VBO);
@@ -86,48 +79,10 @@ int Display::Scene() {
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 9, verts, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertsN, verts, GL_STATIC_DRAW);
     //? Set vertex attribute pointers
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
-    //? Compilie the vertex shader
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);  
-    //! Check if VERTEX SHADER compiled successfully
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success){
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    //? Compile the fragment (pixel) shader
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    //! Check if FRAGMENT SHADER compiled successfully
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success){
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-    
-    //? Create shader program, linking the two shader objects
-    shaderProgram = glCreateProgram();
-    current_shader_program = shaderProgram;
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    //! Check if shader program linked successfully
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-    }
-
-    //? Delete old shader objects now that they have been linked in a program
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader); 
 
 
     //? Main window loop
@@ -218,4 +173,85 @@ void window_close_callback(GLFWwindow* window)
 void window_size_callback(GLFWwindow* window, int w, int h)
 {
 
+}
+
+GLuint Display::LoadShaders(const char * vertex_file_path,const char * fragment_file_path) {
+    int success;
+    unsigned int vertexShader, fragmentShader, shaderProgram;
+    string vertexShaderSource, fragmentShaderSource;
+    char infoLog[512];
+
+    //? Open the source files
+    ifstream vertexSrcStream(vertex_file_path, ios::in);
+    ifstream fragmentSrcStream(fragment_file_path, ios::in);
+    //? Read VERTEX SHADER source code
+	ifstream VertexShaderStream(vertex_file_path, ios::in);
+	if(VertexShaderStream.is_open()){
+		stringstream sstr;
+		sstr << VertexShaderStream.rdbuf();
+		vertexShaderSource = sstr.str();
+		VertexShaderStream.close();
+	}else{
+		cout << "*** ERROR IN LoadShaders(): unable to open " << vertex_file_path << " for vertex/fragment shader source file. Exiting... ***\n";
+		getchar();
+		return 0;
+	}
+
+    //? Read the FRAGMENT SHADER source code
+	ifstream FragmentShaderStream(fragment_file_path, ios::in);
+	if(FragmentShaderStream.is_open()){
+		stringstream sstr;
+		sstr << FragmentShaderStream.rdbuf();
+		fragmentShaderSource = sstr.str();
+		FragmentShaderStream.close();
+	}
+
+	GLint Result = GL_FALSE;
+	int InfoLogLength;
+
+    //? Compilie the vertex shader
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    char const * VertexSourcePointer = vertexShaderSource.c_str();
+    glShaderSource(vertexShader, 1, &VertexSourcePointer, NULL);
+    glCompileShader(vertexShader);  
+    //! Check if VERTEX SHADER compiled successfully
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success){
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << "*** ERROR IN LoadShaders(): unable to compile VERTEX SHADER source. Exiting... ***\n" << infoLog << std::endl;
+    }
+
+    //? Compile the fragment (pixel) shader
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    char const * FragmentSourcePointer = fragmentShaderSource.c_str();
+    glShaderSource(fragmentShader, 1, &FragmentSourcePointer, NULL);
+    glCompileShader(fragmentShader);
+    //! Check if FRAGMENT SHADER compiled successfully
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    if (!success){
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        std::cout << "*** ERROR IN LoadShaders(): unable to compile FRAGMENT SHADER source. Exiting... ***\n" << infoLog << std::endl;
+    }
+    
+    //? Create shader program, linking the two shader objects
+    shaderProgram = glCreateProgram();
+    current_shader_program = shaderProgram;
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+    //! Check if shader program linked successfully
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        cout << "*** ERROR IN LoadShaders(): unable to link vertex+fragment shaders. Exiting... ***\n" << infoLog;
+    }
+
+    glDetachShader(shaderProgram, vertexShader);
+	glDetachShader(shaderProgram, fragmentShader);
+
+    //? Delete old shader objects now that they have been linked in a program
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader); 
+
+    return shaderProgram;
 }
