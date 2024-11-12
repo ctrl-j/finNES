@@ -37,6 +37,9 @@
 //! /////////////////////// !//
 #pragma once
 #include <cstdint>
+#include <vector>
+
+using namespace std;
 
 //? Defining constants for easier use of APU registers
 #define SQ1_VOL (uint16_t) 0x4000
@@ -119,23 +122,41 @@ private:
     uint8_t ReadReg();
     // Set value at system register macro. Returns 0 if success, 1 otherwise
     uint8_t WriteReg();
+
+
 public:
     APU();
     ~APU();
 
+    //? Public members
+    vector<float> chFreqs; // Frequency for each synth channel
+
     //? General APU functionality
-    void CopyData_OAM_DMA();
-    void ChanEnable();
+    void CopyData_OAM_DMA(); //TODO
+    void ChannelEnable(); //TODO
+    // Returns true if the channel meets the conditions to not have audio playing
+    // 0: Pulse 1    1: Pulse 2    2: Triangle   3: Noise    4: Sampler
+    bool IsChannelMuted(uint8_t channel_num); //TODO
+    // Returns vector of all channels' mute statuses
+    // { Pulse 1, Pulse 2, Triangle, Noise, Sampler }
+    vector<bool> ChannelMuteStatuses();
+
+    //? Convert audio frequency (in Hz) to a raw period 
+    //? (rounded to 11-bit whole number, 0-2047)
+    uint16_t FreqToRawPeriod(float fhz);
 
     //? Methods relevant to multiple channels
-    void SQ_NOISE_SetVolume(uint8_t new_volume);
-    void SQ_TRI_SetPeriodLO(uint8_t period_low_byte);
-    void SQ_TRI_SetPeriodHI(uint8_t period_high_byte);
-    void SQ_TRI_NOISE_SetLenCntVal(uint8_t counter_val);
+    void SQ_NOISE_SetVolume(uint8_t new_volume, uint8_t channel_num); //TODO
+
+    void SQ_TRI_SetRawPeriod(uint16_t raw_period, uint8_t channel_num);
+    void SQ_TRI_SetPeriodLO(uint8_t period_low_8, uint8_t channel_num); //TODO
+    void SQ_TRI_SetPeriodHI(uint8_t period_high_8, uint8_t channel_num); //TODO
+
+    void SQ_TRI_NOISE_SetLenCntVal(uint8_t counter_val, uint8_t channel_num); //TODO
 
     //? Square/Pulse wave channels (2 channels)
-    void SQ_SetDuty(uint8_t duty_cycle);
-    void SQ_SetSweep(uint8_t flags);
+    void SQ_SetDuty(float duty_cycle, uint8_t pulse_channel); //TODO
+    void SQ_SetSweep(uint8_t flags, uint8_t pulse_channel); //TODO
 
     //? Triangle wave channel
     void TRI_SetLinearCnt();
