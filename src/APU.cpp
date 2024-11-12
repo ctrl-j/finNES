@@ -15,6 +15,7 @@ APU::APU() {
 
     //? Set APU to known initial state:
     //?     -Disable sweep, envelope, length
+
 }
 
 uint8_t APU::ReadReg() {
@@ -27,17 +28,20 @@ uint8_t APU::WriteReg() {
 
 bool APU::IsChannelMuted(uint8_t channel_num) {
     //? General mute conditions:
+    //?     -EITHER pulse channel has vol=0 then MUTE them
+    //?     -Tri, Noise, or DCM has vol=0 then MUTE them
     //?     -Length counter == 0
 
     //? Pulse/Square 1 and 2
     if (channel_num < 2) {
+        //? FREQUENCY; 
         //? SWEEP UNIT; current period is less than 8
         //? SWEEP UNIT; target period is greater than $7FF
 
     }
     //? Triangle
     else if (channel_num == 2) {
-
+        //? Linear counter == 0
     }
     //? Noise
     else if (channel_num == 3) {
@@ -45,7 +49,8 @@ bool APU::IsChannelMuted(uint8_t channel_num) {
     }
     //? Sampler
     else if (channel_num == 4) {
-
+        //! DMC Channel always outputs value of its counter (regardless of enable)
+        //! Enable bit only disables the automatic playback of sample
     }
     //? Invalid channel number
     else {
@@ -68,11 +73,11 @@ uint16_t APU::FreqToRawPeriod(float fhz) {
 
 //? General APU functionality
 void APU::CopyData_OAM_DMA() {
-
+    //TODO
 }
 
 void APU::ChannelEnable() {
-
+    //TODO
 }
 
 //? Methods relevant to multiple channels
@@ -91,13 +96,13 @@ void APU::SQ_NOISE_SetVolume(uint8_t new_volume, uint8_t channel_num) {
 
     //? Set appropriate volume register
     if (channel_num == 0) {
-
+        //TODO
     }
     else if (channel_num == 1) {
-
+        //TODO
     }
     else if (channel_num == 2) {
-        
+        //TODO
     }
 }
 
@@ -121,13 +126,13 @@ void APU::SQ_TRI_SetPeriodLO(uint8_t period_low_8, uint8_t channel_num) {
 
     //? Set appropriate PERIOD_LO register
     if (channel_num == 0) {
-
+        //TODO
     }
     else if (channel_num == 1) {
-
+        //TODO
     }
     else if (channel_num == 2) {
-        
+        //TODO
     }
 }
 
@@ -140,13 +145,13 @@ void APU::SQ_TRI_SetPeriodHI(uint8_t period_high_8, uint8_t channel_num) {
 
     //? Set appropriate PERIOD_HI register
     if (channel_num == 0) {
-
+        //TODO
     }
     else if (channel_num == 1) {
-
+        //TODO
     }
     else if (channel_num == 2) {
-        
+        //TODO
     }
 }
 
@@ -155,6 +160,20 @@ void APU::SQ_TRI_NOISE_SetLenCntVal(uint8_t counter_val, uint8_t channel_num) {
     if (channel_num > 3) {
         cout << "WARNING (in APU::SQ_TRI_NOISE_SetLenCntVal): illegal value for channel_num - [" << channel_num << "]. Continuing...\n";
         return;
+    }
+
+    //? Set appropriate LENGTH_CNT register
+    if (channel_num == 0) {
+        //TODO
+    }
+    else if (channel_num == 1) {
+        //TODO
+    }
+    else if (channel_num == 2) {
+        //TODO
+    }
+    else if (channel_num == 3) {
+        //TODO
     }
 }
 
@@ -170,16 +189,16 @@ void APU::SQ_SetDuty(float duty_cycle, uint8_t pulse_channel) {
     //? Check percentage vals first
     //? Also allows for using "binary"/register-accurate vals
     if (duty_cycle == 12.5f || (int)duty_cycle == 0) {
-
+        //TODO
     }
     else if (duty_cycle == 25.0f || (int)duty_cycle == 1) {
-
+        //TODO
     }
     else if (duty_cycle == 25.0f || (int)duty_cycle == 2) {
-        
+        //TODO
     }
     else if (duty_cycle == 25.0f || (int)duty_cycle == 3) {
-        
+        //TODO
     }
     //? Invalid duty cycle value
     else {

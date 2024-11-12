@@ -36,8 +36,10 @@
 //!     $401C-401F --   N/A     -- Used for unfinished IRQ timer
 //! /////////////////////// !//
 #pragma once
+
 #include <cstdint>
 #include <vector>
+#include "apu_derived.hh"
 
 using namespace std;
 
@@ -67,32 +69,6 @@ using namespace std;
 
 class Ricoh_2A03 {
 private:
-    //? ...
-public:
-    Ricoh_2A03();
-    ~Ricoh_2A03();
-};
-
-//! NOTE ABOUT CONSTRUCTOR+DESTRUCTOR CALLING ORDER:
-//! (EX) Class A (parent) --> Class B (derived 1) --> Class C (derived 2)
-//! Contructors:
-//!     Called from Most Based --> Most Inherited
-//!     A() --> B() --> C()
-//! Destructors:
-//!     Called from Most Inherited --> Most Based
-//!     ~C() --> ~B() --> ~A()
-
-class CPU : Ricoh_2A03 {
-private:
-    //? Internal 6502 stuff
-    //? ...
-public:
-    CPU();
-    ~CPU();
-};
-
-class APU : Ricoh_2A03 {
-private:
     //? Register vars to hold the value after reading it from memory,
     //? so that you don't have to make your own vars for them
     uint8_t SQ1_VOL_REG;
@@ -117,16 +93,44 @@ private:
     uint8_t SND_CHN_REG;
     uint8_t JOY1_REG;
     uint8_t JOY2_REG;
+public:
+    Ricoh_2A03();
+    ~Ricoh_2A03();
+
+    CPU* cpu = nullptr;
+    APU* apu = nullptr;
 
     // Returns value at system register macro
     uint8_t ReadReg();
     // Set value at system register macro. Returns 0 if success, 1 otherwise
     uint8_t WriteReg();
+};
 
+//! NOTE ABOUT CONSTRUCTOR+DESTRUCTOR CALLING ORDER:
+//! (EX) Class A (parent) --> Class B (derived 1) --> Class C (derived 2)
+//! Contructors:
+//!     Called from Most Based --> Most Inherited
+//!     A() --> B() --> C()
+//! Destructors:
+//!     Called from Most Inherited --> Most Based
+//!     ~C() --> ~B() --> ~A()
 
+class CPU : public Ricoh_2A03 {
+private:
+    //? Internal 6502 stuff
+    //? ...
+public:
+    CPU();
+    ~CPU();
+};
+
+class APU : public Ricoh_2A03 {
 public:
     APU();
     ~APU();
+
+    Mixer* MXR;
+    FrameCounter* FMCNT;
 
     //? Public members
     vector<float> chFreqs; // Frequency for each synth channel
@@ -144,31 +148,4 @@ public:
     //? Convert audio frequency (in Hz) to a raw period 
     //? (rounded to 11-bit whole number, 0-2047)
     uint16_t FreqToRawPeriod(float fhz);
-
-    //? Methods relevant to multiple channels
-    void SQ_NOISE_SetVolume(uint8_t new_volume, uint8_t channel_num); //TODO
-
-    void SQ_TRI_SetRawPeriod(uint16_t raw_period, uint8_t channel_num);
-    void SQ_TRI_SetPeriodLO(uint8_t period_low_8, uint8_t channel_num); //TODO
-    void SQ_TRI_SetPeriodHI(uint8_t period_high_8, uint8_t channel_num); //TODO
-
-    void SQ_TRI_NOISE_SetLenCntVal(uint8_t counter_val, uint8_t channel_num); //TODO
-
-    //? Square/Pulse wave channels (2 channels)
-    void SQ_SetDuty(float duty_cycle, uint8_t pulse_channel); //TODO
-    void SQ_SetSweep(uint8_t flags, uint8_t pulse_channel); //TODO
-
-    //? Triangle wave channel
-    void TRI_SetLinearCnt();
-
-    //? Noise channel
-    void NOISE_SetPeriod();
-    void NOISE_SetWaveform();
-
-    //? DMC/Sampler channel
-    void DMC_SetFrequency();
-    void DMC_SetDACOutput();
-    void DMC_SetStartAddr();
-    void DMC_SetSampleLen();
-
 };
