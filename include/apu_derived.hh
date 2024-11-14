@@ -41,17 +41,52 @@ class Mixer : public APU {
         Mixer();
         ~Mixer();
 
+        enum MIX_APPROX_MODE {
+            NONLINEAR,
+            LOOKUP,
+            LINEAR
+        };
+        MIX_APPROX_MODE mix_mode;
+        float (Mixer::*MIX_FUNC)(); //? Function pointer for current mixdown mode
+
         float pulse_out, tnd_out, output_vol;
+        float* LUT_TND_OUT = nullptr;
+        float* LUT_PULSE_OUT = nullptr;
         vector<uint8_t> vols;
+
 
         Pulse* pulse1 = nullptr;
         Pulse* pulse2 = nullptr;
         Triangle* tri = nullptr;
         Noise* noise = nullptr;
         DMC* dmc = nullptr;
+        uint8_t pulse1_out, pulse2_out, tri_out, noise_out, dmc_out;
 
-        float OutputCompVolumes();
-        vector<uint8_t> GetChannelVolumes(); //TODO
+        //? ????????????????????????
+        //? Sound "Output" Methods
+        //? ????????????????????????
+        //? Calculates approximate audio output level in range [0.0, 1.0]
+        //? Slower but more accurate sound
+        float MixdownNonLinear();
+        //? Approximations of tnd_out (203 entries), pulse_out (31 entires)
+        //?     (NESDev.org): "... due to the approximation of tnd_out, the numerators are 
+        //?     adjusted slightly to preserve the normalized output range... The tnd_out table
+        //?     is approximated (within 4%) by using a base unit close to the DMC's DAC.
+        //? Faster but more rough approximation
+        float MixdownLUT();
+        //? Note from NESDev.org:
+        //? "... results in slightly louder DMC samples, but otherwise 
+        //?     fairly accurate operation since the wave channels use a small
+        //?     portion of the transfer curve. The overall volume will be reduced
+        //?     due to the headroom required by the DMC approximation."
+        //? Fastest but roughest approximation
+        float MixdownLinear();
+        
+
+        //? Updates digital volume level for each channel
+        void GetChannelVolumes(); //TODO
+
+        void ChangeMixdownMode(MIX_APPROX_MODE mm);
 };
 
 class Pulse : public APU {
