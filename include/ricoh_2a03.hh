@@ -139,12 +139,6 @@ public:
     //? General APU functionality
     void CopyData_OAM_DMA(); //TODO
     void ChannelEnable(); //TODO
-    // Returns true if the channel meets the conditions to not have audio playing
-    // 0: Pulse 1    1: Pulse 2    2: Triangle   3: Noise    4: Sampler
-    bool IsChannelMuted(uint8_t channel_num); //TODO
-    // Returns vector of all channels' mute statuses
-    // { Pulse 1, Pulse 2, Triangle, Noise, Sampler }
-    vector<bool> ChannelMuteStatuses();
 
     //? Convert audio frequency (in Hz) to a raw period 
     //? (rounded to 11-bit whole number, 0-2047)

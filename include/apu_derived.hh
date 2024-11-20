@@ -55,11 +55,11 @@ class Mixer : public APU {
         vector<uint8_t> vols;
 
 
-        Pulse* pulse1 = nullptr;
-        Pulse* pulse2 = nullptr;
-        Triangle* tri = nullptr;
-        Noise* noise = nullptr;
-        DMC* dmc = nullptr;
+        Pulse* pulse1;
+        Pulse* pulse2;
+        Triangle* tri;
+        Noise* noise;
+        DMC* dmc;
         uint8_t pulse1_out, pulse2_out, tri_out, noise_out, dmc_out;
 
         //? ????????????????????????
@@ -81,10 +81,12 @@ class Mixer : public APU {
         //?     due to the headroom required by the DMC approximation."
         //? Fastest but roughest approximation
         float MixdownLinear();
-        
 
         //? Updates digital volume level for each channel
         void GetChannelVolumes(); //TODO
+        //? Returns vector of all channels' mute statuses
+        //* { Pulse 1, Pulse 2, Triangle, Noise, Sampler }
+        vector<bool> GetChannelMuteStatuses();
 
         void ChangeMixdownMode(MIX_APPROX_MODE mm);
 };
@@ -108,6 +110,7 @@ class Pulse : public APU {
         ~Pulse();
 
         void SetVolume(uint8_t new_volume);
+        bool IsMuted();
         void SetRawPeriod(uint16_t raw_period);
         void SetLenCntVal(uint8_t counter_val);
         void SetDuty(float duty_cycle);
@@ -126,6 +129,7 @@ class Triangle : public APU {
         Triangle();
         ~Triangle();
 
+        bool IsMuted();
         void SetRawPeriod(uint16_t raw_period);
         void SetLenCntVal(uint8_t counter_val);
 };
@@ -143,6 +147,7 @@ class Noise : public APU {
         ~Noise();
 
         void SetVolume(uint8_t new_volume);
+        bool IsMuted();
         void SetLenCntVal(uint8_t counter_val);
 };
 
@@ -159,4 +164,6 @@ class DMC : public APU {
     public:
         DMC();
         ~DMC();
+
+        bool IsMuted();
 };
