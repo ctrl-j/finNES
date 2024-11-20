@@ -1,8 +1,8 @@
 #include <cstdint>
 
-#include "../include/sound.hh"
-#include "../include/apu_derived.hh"
-#include "../include/ricoh_2a03.hh"
+#include "../../include/sound.hh"
+#include "../../include/apu_derived.hh"
+#include "../../include/ricoh_2a03.hh"
 
 Sound::Sound() {
     //? Init member APU object

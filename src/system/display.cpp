@@ -8,7 +8,10 @@
 #include <string>
 #include <sstream>
 
-#include "../include/display.hh"
+#include "../../include/display.hh"
+#include "../../include/nes.hh"
+#include "../../include/ricoh_2a03.hh"
+#include "../../include/ppu.hh"
 
 using namespace std;
 

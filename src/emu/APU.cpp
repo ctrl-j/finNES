@@ -1,7 +1,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../include/ricoh_2a03.hh"
+#include "../../include/ricoh_2a03.hh"
 
 using namespace std;
 
