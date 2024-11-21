@@ -16,14 +16,6 @@
 using namespace std;
 
 Display::Display() {
-    
-}
-
-Display::~Display() {
-
-}
-
-int Display::Init() {
     //? Initialize GLFW
     glfwInit();
     //? Tell GLFW to use v4.0 of OpenGL API
@@ -37,7 +29,7 @@ int Display::Init() {
     window = glfwCreateWindow(640, 480, "finNES v0.1", NULL, NULL);
     if (window == NULL) {
         cout << "*** GLFW ERROR: Failed to create GLFW window. Exiting... ***\n";
-        return -1;
+        return;
     }
     glfwMakeContextCurrent(window);
     glfwGetWindowSize(window, &window_width, &window_height);
@@ -47,7 +39,7 @@ int Display::Init() {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         cout << "*** GLAD ERROR: Failed to initialize GLAD. Exiting...\n";
-        return -1;
+        return;
     } 
 
     //? Tell GLFW what to show in the viewport
@@ -60,8 +52,10 @@ int Display::Init() {
 
     //? Load shader sources, compile+link to shader program
     LoadShaders((char*)"resource/vertex_shader.txt", (char*)"resource/fragment_shader.txt");
+}
 
-    return 0;
+Display::~Display() {
+
 }
 
 int Display::Scene() {
