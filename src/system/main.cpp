@@ -3,8 +3,15 @@
 #include <cstdint>
 
 #include "../../include/nes.hh"
+#include "../../include/tests.hh"
 
 int main(int argc, char** argv) {
+    #ifdef TEST
+        //? Run appropriate test stuff
+        test_main();
+    #endif
+
+
     VM = new NES();
     
     //? Init vertex data for the starting screen

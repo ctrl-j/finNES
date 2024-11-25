@@ -4,6 +4,12 @@
 
 #include "nes.hh"
 
+//? Shorthand for 8- and 16-bit unsigned integers
+typedef uint8_t u8;
+typedef uint16_t u16;
+
+class MDATA;
+
 class Memory {
 private:
     u8* RAM;    // Array of 64KB data for the system, programs, and "peripherals"
@@ -13,6 +19,18 @@ private:
     u8* MemAddr(u16 address_literal);
 
 public:
+    Memory() {
+        //? Allocate RAM+ROM array (65,536 bytes)
+        RAM = new u8[65536];
+        //? Set ROM offset pointer
+        ROM = &(RAM[32768]);
+    };
+    ~Memory() {
+        delete[] RAM;
+        RAM = NULL;
+        ROM = NULL;
+    };
+
     //? Reads bytes from address "start" up to and including address "end"
     //? Returns pointer to MDATA object pointer, containing the data
     MDATA* ReadData(u16 start, u16 end);
@@ -55,9 +73,14 @@ public:
     MDATA() : single(false), b(0), ba(NULL), ban(0) {};
     MDATA(uint8_t n) : single(true), b(n), ba(NULL), ban(0) {};
     MDATA(uint8_t* na, uint8_t n) : single(false), b(0), ba(na), ban(n) {};
-    ~MDATA();
+    ~MDATA() {
+        if (ba != NULL) {
+            delete[] ba;
+            ba = NULL;
+        }
+    };
 
     //? Allows implicit conversion to byte/byte array
-    operator uint8_t() const;
-    operator uint8_t*() const;
+    operator uint8_t() const { return b; };
+    operator uint8_t*() const { return ba; };
 };

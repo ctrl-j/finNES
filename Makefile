@@ -1,8 +1,8 @@
 CC = g++
 CFLAGS = -std=c++20 -Wall -Werror -g -pedantic
 
-#SOURCES = $(wildcard src/*.cpp)
-SOURCES = src/main.cpp src/display.cpp src/glad.c
+SOURCES = $(wildcard *.cpp) $(wildcard */*/*.cpp)
+#SOURCES = src/main.cpp src/display.cpp src/glad.c
 
 INCLUDE_PATHS = -I. -I/include
 
@@ -19,5 +19,12 @@ else
 
 endif
 
+all: finNES
+
 finNES: $(SOURCES)
 	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDE_PATHS) $(LDFLAGS) $(LDLIBS)
+
+.PHONY: test
+
+test: $(SOURCES)
+	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDE_PATHS) $(LDFLAGS) $(LDLIBS) -DTEST

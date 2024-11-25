@@ -5,9 +5,12 @@
 
 #include "nes.hh"
 #include "ricoh_2a03.hh"
-#include "apu_derived.hh"
 
 using namespace std;
+
+//? Shorthand for 8- and 16-bit unsigned integers
+typedef uint8_t u8;
+typedef uint16_t u16;
 
 class Sound {
 private:

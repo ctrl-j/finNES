@@ -3,27 +3,15 @@
 #include <iostream>
 
 #include "../../include/nes.hh"
-#include "../include/display.hh"
-#include "../include/sound.hh"
-#include "../include/ricoh_2a03.hh"
+#include "../../include/display.hh"
+#include "../../include/sound.hh"
+#include "../../include/ricoh_2a03.hh"
 #include "../../include/memory.hh"
-#include "../include/ppu.hh"
-#include "../../include/apu_derived.hh"
+#include "../../include/ppu.hh"
 
 using namespace std;
 
 NES* VM = NULL;
-
-enum InfoStatus {
-    SUCCESS,
-    ERROR,
-    WARNING,
-    NULL_PTR,
-    INVALID_PARAM,
-    READ_ERROR,
-    WRITE_ERROR,
-    
-};
 
 NES::NES() {
     //? Don't init start file yet, that is the final step >:)
@@ -184,7 +172,7 @@ u8 NES::GetBit(MDATA data, u8 bit_idx, bool addr) {
 //* *********************
 //*  iNES Class Methods
 //* *********************
-u8 NES::iNES_Read(const char* file_in) {
+InfoStatus NES::iNES_Read(const char* file_in) {
     //? Verify file can be opened
     ifstream NES_IN(file_in, ios::binary);
     if (NES_IN.fail()) {
@@ -206,7 +194,7 @@ u8 NES::iNES_Read(const char* file_in) {
     else if (_DATA->file_size <= 32768 && _DATA->file_size > 0) {
         //? Store the file stream's data in the iNES object
         //? Also process the data and set appropriate flags and states for easy access
-        u8 FILE_PROC_STATUS = _DATA->SaveData(NES_IN);
+        InfoStatus FILE_PROC_STATUS = _DATA->SaveData(NES_IN);
         return FILE_PROC_STATUS;
     }
     else if (_DATA->file_size == 0) {
@@ -217,22 +205,22 @@ u8 NES::iNES_Read(const char* file_in) {
     return SUCCESS;
 }
 
-u8 NES::iNES_Read(const char* file_in, uint16_t offset) {
+InfoStatus NES::iNES_Read(const char* file_in, uint16_t offset) {
 
     return SUCCESS;
 }
 
-u8 NES::iNES_Read(const char* file_in, uint16_t offset, uint16_t width) {
+InfoStatus NES::iNES_Read(const char* file_in, uint16_t offset, uint16_t width) {
 
     return SUCCESS;
 }
 
-u8 NES::iNES_Write(const char* file_out,  vector<uint16_t> data, bool overwrite) {
+InfoStatus NES::iNES_Write(const char* file_out,  vector<uint16_t> data, bool overwrite) {
 
     return SUCCESS;
 }
 
-u8 iNES::SaveData(ifstream& iNES_in) {
+InfoStatus iNES::SaveData(ifstream& iNES_in) {
     //? Invalid file stream
     if (iNES_in.fail()) {
         cout << "ERROR (in iNES::SaveData): unable to access input iNES file stream. Exiting...\n";
@@ -258,7 +246,7 @@ u8 iNES::SaveData(ifstream& iNES_in) {
     return SUCCESS;
 }
 
-u8 iNES::ProcessRead() {
+InfoStatus iNES::ProcessRead() {
     //? Fill in "header" (16 bytes)
     header = new vector<uint8_t>(file_data, file_data + 15);
     //* Set member flags based on header contents
@@ -295,7 +283,7 @@ u8 iNES::ProcessRead() {
     return SUCCESS;
 }
 
-u8 iNES::ExportData(ofstream& iNES_out) {
+InfoStatus iNES::ExportData(ofstream& iNES_out) {
     //TODO
     return SUCCESS;
 }

@@ -1,35 +1,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../include/memory.hh"
-
-MDATA::operator uint8_t() const {
-    return b;
-}
-
-MDATA::operator uint8_t*() const {
-    return ba;
-}
-
-MDATA::~MDATA() {
-    if (ba != NULL) {
-        delete[] ba;
-        ba = NULL;
-    }
-}
-
-Memory::Memory() {
-    //? Allocate RAM+ROM array (65,536 bytes)
-    RAM = new u8[65536];
-    //? Set ROM offset pointer
-    ROM = &(RAM[32768]);
-}
-
-Memory::~Memory() {
-    delete[] RAM;
-    RAM = NULL;
-    ROM = NULL;
-}
+#include "../../include/memory.hh"
 
 u8* Memory::MemAddr(u16 address_literal) {
     return &(RAM[address_literal]);

@@ -2,54 +2,54 @@
 #include <iostream>
 #include <fstream>
 
-#include "../include/NES.hh"
+#include "../../include/nes.hh"
 
 using namespace std;
 
-InfoStatus NES::iNES_Read(const char* file_in) {
-    //? Verify file can be opened
-    ifstream NES_IN(file_in, ios::binary);
+InfoStatus NES::iNES_Read(const char* _DATA_in) {
+    //? Verify _DATA can be opened
+    ifstream NES_IN(_DATA_in, ios::binary);
     if (NES_IN.fail()) {
-        cout << "ERROR (in NES::iNES_Read): could not open file, \'" << file_in << "\', to be read as iNES. Continuing...\n";
+        cout << "ERROR (in NES::iNES_Read): could not open _DATA, \'" << _DATA_in << "\', to be read as iNES. Continuing...\n";
         return READ_ERROR;
     }
 
-    //? Initialize iNES FILE member object
-    FILE = new iNES(file_in);
+    //? Initialize iNES _DATA member object
+    _DATA = new iNES(_DATA_in);
 
     //* 32768 == $8000
-    if (FILE->file_size > 32768) {
+    if (_DATA->file_size > 32768) {
         //? Greater than size of ROM page
         //? IDK how to handle this yet, so I just won't
-        cout << "WARNING (in NES::iNES_Read): no support for >32KB files (yet). Continuing...\n";
+        cout << "WARNING (in NES::iNES_Read): no support for >32KB _DATAs (yet). Continuing...\n";
         return READ_ERROR;
     }
-    //? File will fit in ROM page
-    else if (FILE->file_size <= 32768 && FILE->file_size > 0) {
-        //? Store the file stream's data in the iNES object
+    //? _DATA will fit in ROM page
+    else if (_DATA->file_size <= 32768 && _DATA->file_size > 0) {
+        //? Store the _DATA stream's data in the iNES object
         //? Also process the data and set appropriate flags and states for easy access
-        InfoStatus FILE_PROC_STATUS = FILE->SaveData(NES_IN);
-        return FILE_PROC_STATUS;
+        InfoStatus _DATA_PROC_STATUS = _DATA->SaveData(NES_IN);
+        return _DATA_PROC_STATUS;
     }
-    else if (FILE->file_size == 0) {
-        //? Empty file
+    else if (_DATA->file_size == 0) {
+        //? Empty _DATA
         return READ_ERROR;
     }
 
     return SUCCESS;
 }
 
-InfoStatus NES::iNES_Read(const char* file_in, uint16_t offset) {
+InfoStatus NES::iNES_Read(const char* _DATA_in, uint16_t offset) {
 
     return SUCCESS;
 }
 
-InfoStatus NES::iNES_Read(const char* file_in, uint16_t offset, uint16_t width) {
+InfoStatus NES::iNES_Read(const char* _DATA_in, uint16_t offset, uint16_t width) {
 
     return SUCCESS;
 }
 
-InfoStatus NES::iNES_Write(const char* file_out,  vector<uint16_t> data, bool overwrite) {
+InfoStatus NES::iNES_Write(const char* _DATA_out,  vector<uint16_t> data, bool overwrite) {
 
     return SUCCESS;
 }
@@ -58,34 +58,34 @@ InfoStatus NES::iNES_Write(const char* file_out,  vector<uint16_t> data, bool ov
 //*  iNES Class Methods
 //* *********************
 InfoStatus iNES::SaveData(ifstream& iNES_in) {
-    //? Invalid file stream
+    //? Invalid _DATA stream
     if (iNES_in.fail()) {
-        cout << "ERROR (in iNES::SaveData): unable to access input iNES file stream. Exiting...\n";
+        cout << "ERROR (in iNES::SaveData): unable to access input iNES _DATA stream. Exiting...\n";
         return READ_ERROR;
     }
 
-    //? Get file size
-    iNES_in.seekg(0, ios::end); // Go to end of file to get size
-    file_size = (uint32_t)iNES_in.tellg();
-    iNES_in.seekg(0, ios::beg); // Return to start of file
+    //? Get _DATA size
+    iNES_in.seekg(0, ios::end); // Go to end of _DATA to get size
+    _DATA->file_size = (uint32_t)iNES_in.tellg();
+    iNES_in.seekg(0, ios::beg); // Return to start of _DATA
 
-    //? Allocate buffer to store file data
-    FILE->file_data = new char[FILE->file_size];
+    //? Allocate buffer to store _DATA data
+    _DATA->file_data = new char[_DATA->file_size];
 
-    //? Read file data into buffer, close the file
-    iNES_in.read(FILE->file_data, FILE->file_size);
+    //? Read _DATA data into buffer, close the _DATA
+    iNES_in.read(_DATA->file_data, _DATA->file_size);
     iNES_in.close();
 
-    //? Process file data
-    ist FILE_PROC_STATUS = ProcessRead();
-    cout << "FILE \'" << filename << "\' PROCESSED w/ STATUS - " << IST_Strings[FILE_PROC_STATUS] << "\n";
+    //? Process _DATA data
+    ist _DATA_PROC_STATUS = ProcessRead();
+    cout << "FILE \'" << filename << "\' PROCESSED w/ STATUS - " << IST_Strings[_DATA_PROC_STATUS] << "\n";
 
     return SUCCESS;
 }
 
 InfoStatus iNES::ProcessRead() {
     //? Fill in "header" (16 bytes)
-    header = new vector<uint8_t>(file_data, file_data + 15);
+    header = new vector<uint8_t>(file_size, file_size + 15);
     //* Set member flags based on header contents
     //* Bytes 0-3: ASCII "NES" followed by MSDOS EOF
 
@@ -114,7 +114,7 @@ InfoStatus iNES::ProcessRead() {
     
     //? Check for "PROM" (16 bytes Data, 16 bytes CounterOut)
 
-    //? Check for "title" at end of file (127 or 128 bytes)
+    //? Check for "title" at end of _DATA (127 or 128 bytes)
 
 
     return SUCCESS;

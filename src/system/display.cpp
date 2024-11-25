@@ -1,5 +1,5 @@
 //! GLAD packaged for OpenGL version 4.0
-#include "../include/glad/glad.h"
+#include "../../include/glad/glad.h"
 #include <GLFW/glfw3.h>
 
 #include <cstdint>

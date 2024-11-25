@@ -1,6 +1,6 @@
 #include <cstdint>
 
-#include "../include/ppu.hh"
+#include "../../include/ppu.hh"
 
 //! ///////////////////////// !//
 //!--Picture Processing Unit--!//
