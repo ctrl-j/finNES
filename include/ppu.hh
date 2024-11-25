@@ -2,6 +2,6 @@
 
 class PPU {
 public:
-    PPU();
-    ~PPU();
+    PPU() {};
+    ~PPU() {};
 };

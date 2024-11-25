@@ -26,5 +26,5 @@ finNES: $(SOURCES)
 
 .PHONY: test
 
-test: $(SOURCES)
+test: $(SOURCES) src/system/glad.c
 	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDE_PATHS) $(LDFLAGS) $(LDLIBS) -DTEST

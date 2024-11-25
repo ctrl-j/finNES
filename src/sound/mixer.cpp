@@ -87,13 +87,13 @@ void Mixer::GetChannelVolumes() {
 
 void Mixer::ChangeMixdownMode(MIX_APPROX_MODE mm) {
     if (mm == NONLINEAR) {
-        MIX_FUNC = MixdownNonLinear;
+        MIX_FUNC = &Mixer::MixdownNonLinear;
     }
     else if (mm == LOOKUP) {
-        MIX_FUNC = MixdownLUT;
+        MIX_FUNC = &Mixer::MixdownLUT;
     }
     else if (mm == LINEAR) {
-        MIX_FUNC = MixdownLinear;
+        MIX_FUNC = &Mixer::MixdownLinear;
     }
     else {
         cout << "ERROR (in Mixer::ChangeMixdownMode): invalid parameter for Mix Approximation Mode - [" << mm << "]. Continuing...\n";

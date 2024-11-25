@@ -15,6 +15,9 @@
 
 using namespace std;
 
+char infoLog[512];
+int InfoLogLength = 512;
+
 Display::Display() {
     //? Initialize GLFW
     glfwInit();
@@ -60,7 +63,6 @@ Display::~Display() {
 
 int Display::Scene() {
     unsigned int VBO, VAO;
-    char infoLog[512];
 
     //? Generate Vertex Buffer Object, Vertex Array Object to store vertex attributes
     glGenBuffers(1, &VBO);
@@ -173,10 +175,9 @@ void window_size_callback(GLFWwindow* window, int w, int h)
 }
 
 GLuint Display::LoadShaders(const char * vertex_file_path,const char * fragment_file_path) {
-    int success;
+    GLint Result = GL_FALSE;
     unsigned int vertexShader, fragmentShader, shaderProgram;
     string vertexShaderSource, fragmentShaderSource;
-    char infoLog[512];
 
     //? Open the source files
     ifstream vertexSrcStream(vertex_file_path, ios::in);
@@ -203,18 +204,15 @@ GLuint Display::LoadShaders(const char * vertex_file_path,const char * fragment_
 		FragmentShaderStream.close();
 	}
 
-	GLint Result = GL_FALSE;
-	int InfoLogLength;
-
     //? Compilie the vertex shader
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     char const * VertexSourcePointer = vertexShaderSource.c_str();
     glShaderSource(vertexShader, 1, &VertexSourcePointer, NULL);
     glCompileShader(vertexShader);  
     //! Check if VERTEX SHADER compiled successfully
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success){
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &Result);
+    if (!Result){
+        glGetShaderInfoLog(vertexShader, InfoLogLength, NULL, infoLog);
         std::cout << "*** ERROR IN LoadShaders(): unable to compile VERTEX SHADER source. Exiting... ***\n" << infoLog << std::endl;
     }
 
@@ -224,8 +222,8 @@ GLuint Display::LoadShaders(const char * vertex_file_path,const char * fragment_
     glShaderSource(fragmentShader, 1, &FragmentSourcePointer, NULL);
     glCompileShader(fragmentShader);
     //! Check if FRAGMENT SHADER compiled successfully
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success){
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &Result);
+    if (!Result){
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
         std::cout << "*** ERROR IN LoadShaders(): unable to compile FRAGMENT SHADER source. Exiting... ***\n" << infoLog << std::endl;
     }
@@ -237,8 +235,8 @@ GLuint Display::LoadShaders(const char * vertex_file_path,const char * fragment_
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
     //! Check if shader program linked successfully
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &Result);
+    if (!Result) {
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
         cout << "*** ERROR IN LoadShaders(): unable to link vertex+fragment shaders. Exiting... ***\n" << infoLog;
     }

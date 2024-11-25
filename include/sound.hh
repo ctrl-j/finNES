@@ -21,8 +21,8 @@ public:
     bool APU_ACTIVE; //? 0= not active (no audio), 1= active (output audio)
     
 
-    Sound();
-    ~Sound();
+    Sound() {};
+    ~Sound() {};
 
     //? Reads current state of VM APU, sends output to audio device accordingly
     void AudioOut(); //TODO

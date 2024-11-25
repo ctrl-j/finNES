@@ -4,6 +4,7 @@
 #include <fstream>
 
 #include "display.hh"
+class Sound;
 #include "sound.hh"
 #include "ricoh_2a03.hh"
 class Memory;
@@ -171,7 +172,7 @@ public:
     //*     +------- 0: Board has NO bus conflicts, 1: Board HAS bus conflicts
 
     iNES(const char* _filename) : filename(_filename) {};
-    ~iNES();
+    ~iNES() {};
 
     //? Saves data in iNES file to object, processes binary data
     //? to fill in the other data members and state members
