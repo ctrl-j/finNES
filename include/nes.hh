@@ -16,6 +16,7 @@ class MDATA;
 typedef uint8_t u8;
 typedef uint16_t u16;
 
+
 enum InfoStatus {
     SUCCESS,
     ERROR,
@@ -27,15 +28,7 @@ enum InfoStatus {
     
 };
 typedef InfoStatus ist;
-const char* IST_Strings[7] = {
-    "SUCCESS",
-    "ERROR",
-    "WARNING",
-    "NULL_PTR",
-    "INVALID_PARAM",
-    "READ_ERROR",
-    "WRITE_ERROR"
-};
+extern const char* IST_Strings[7];
 
 class iNES;
 

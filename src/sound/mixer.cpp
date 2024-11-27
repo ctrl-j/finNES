@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../../include/ricoh_2a03.hh"
+#include "../../include/nes.hh"
 
 using namespace std;
 

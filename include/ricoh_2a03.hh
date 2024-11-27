@@ -42,6 +42,10 @@
 
 using namespace std;
 
+//? Shorthand for 8- and 16-bit unsigned integers
+typedef uint8_t u8;
+typedef uint16_t u16;
+
 //? Defining constants for easier use of APU registers
 #define SQ1_VOL (uint16_t) 0x4000
 #define SQ1_SWEEP (uint16_t) 0x4001
@@ -66,44 +70,7 @@ using namespace std;
 #define JOY1 (uint16_t) 0x4016
 #define JOY2 (uint16_t) 0x4017
 
-class CPU;
-class APU;
-
-class Ricoh_2A03 {
-private:
-    //? Register vars to hold the value after reading it from memory,
-    //? so that you don't have to make your own vars for them
-    uint8_t SQ1_VOL_REG;
-    uint8_t SQ1_SWEEP_REG;
-    uint8_t SQ1_LO_REG;
-    uint8_t SQ1_HI_REG;
-    uint8_t SQ2_VOL_REG;
-    uint8_t SQ2_SWEEP_REG;
-    uint8_t SQ2_LO_REG;
-    uint8_t SQ2_HI_REG;
-    uint8_t TRI_LINEAR_REG;
-    uint8_t TRI_LO_REG;
-    uint8_t TRI_HI_REG;
-    uint8_t NOISE_VOL_REG;
-    uint8_t NOISE_LO_REG;
-    uint8_t NOISE_HI_REG;
-    uint8_t DMC_FREQ_REG;
-    uint8_t DMC_RAW_REG;
-    uint8_t DMC_START_REG;
-    uint8_t DMC_LEN_REG;
-    uint8_t OAMDMA_REG;
-    uint8_t SND_CHN_REG;
-    uint8_t JOY1_REG;
-    uint8_t JOY2_REG;
-    
-public:
-    Ricoh_2A03();
-    ~Ricoh_2A03();
-
-    CPU* cpu = nullptr;
-    APU* apu = nullptr;
-
-};
+class Ricoh_2A03;
 
 //! NOTE ABOUT CONSTRUCTOR+DESTRUCTOR CALLING ORDER:
 //! (EX) Class A (parent) --> Class B (derived 1) --> Class C (derived 2)
@@ -118,34 +85,20 @@ class CPU : public Ricoh_2A03 {
 private:
     //? Internal 6502 stuff
     //? ...
+    u16 PC;
+    u16 ADDR;
+    u8 DATA;
+    u8 SP;
+    u8 S;
+    u8 A;
+    u8 X;
+    u8 Y;
 public:
-    CPU();
+    CPU(bool derived_caller) : Ricoh_2A03(derived_caller) {};
     ~CPU();
+
+    void INIT();
 };
-
-class FrameCounter;
-class Mixer;
-
-class APU : public Ricoh_2A03 {
-public:
-    APU();
-    ~APU();
-
-    Mixer* MXR;
-    FrameCounter* FMCNT;
-
-    //? Public members
-    vector<float> chFreqs; // Frequency for each synth channel
-
-    //? General APU functionality
-    void CopyData_OAM_DMA(); //TODO
-    void ChannelEnable(); //TODO
-
-    //? Convert audio frequency (in Hz) to a raw period 
-    //? (rounded to 11-bit whole number, 0-2047)
-    uint16_t FreqToRawPeriod(float fhz);
-};
-
 
 class Pulse;
 class Triangle;
@@ -308,4 +261,62 @@ class DMC : public APU {
         ~DMC();
 
         bool IsMuted();
+};
+
+class APU : public Ricoh_2A03 {
+public:
+    APU(bool derived_caller) : Ricoh_2A03(derived_caller) {};
+    ~APU();
+
+    void INIT();
+
+    Mixer* MXR;
+    FrameCounter* FMCNT;
+
+    //? Public members
+    vector<float> chFreqs; // Frequency for each synth channel
+
+    //? General APU functionality
+    void CopyData_OAM_DMA(); //TODO
+    void ChannelEnable(); //TODO
+
+    //? Convert audio frequency (in Hz) to a raw period 
+    //? (rounded to 11-bit whole number, 0-2047)
+    uint16_t FreqToRawPeriod(float fhz);
+};
+
+class Ricoh_2A03 {
+private:
+    //? Register vars to hold the value after reading it from memory,
+    //? so that you don't have to make your own vars for them
+    uint8_t SQ1_VOL_REG;
+    uint8_t SQ1_SWEEP_REG;
+    uint8_t SQ1_LO_REG;
+    uint8_t SQ1_HI_REG;
+    uint8_t SQ2_VOL_REG;
+    uint8_t SQ2_SWEEP_REG;
+    uint8_t SQ2_LO_REG;
+    uint8_t SQ2_HI_REG;
+    uint8_t TRI_LINEAR_REG;
+    uint8_t TRI_LO_REG;
+    uint8_t TRI_HI_REG;
+    uint8_t NOISE_VOL_REG;
+    uint8_t NOISE_LO_REG;
+    uint8_t NOISE_HI_REG;
+    uint8_t DMC_FREQ_REG;
+    uint8_t DMC_RAW_REG;
+    uint8_t DMC_START_REG;
+    uint8_t DMC_LEN_REG;
+    uint8_t OAMDMA_REG;
+    uint8_t SND_CHN_REG;
+    uint8_t JOY1_REG;
+    uint8_t JOY2_REG;
+    
+public:
+    Ricoh_2A03(bool derived_caller);
+    ~Ricoh_2A03();
+
+    CPU* cpu = nullptr;
+    APU* apu = nullptr;
+
 };

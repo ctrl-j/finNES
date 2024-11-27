@@ -5,6 +5,16 @@
 #include "../../include/nes.hh"
 #include "../../include/tests.hh"
 
+const char* IST_Strings[7] = {
+    "SUCCESS",
+    "ERROR",
+    "WARNING",
+    "NULL_PTR",
+    "INVALID_PARAM",
+    "READ_ERROR",
+    "WRITE_ERROR"
+};
+
 int main(int argc, char** argv) {
     #ifdef TEST
         //? Run appropriate test stuff
