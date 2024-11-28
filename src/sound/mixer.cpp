@@ -3,11 +3,25 @@
 #include <vector>
 
 #include "../../include/ricoh_2a03.hh"
+#include "../../include/apu.hh"
 #include "../../include/nes.hh"
 
 using namespace std;
 
-Mixer::Mixer() {
+Mixer::~Mixer() {
+    //? Destroy each synth channel
+    delete pulse1;
+    delete pulse2;
+    delete tri;
+    delete noise;
+    delete dmc;
+
+    //? Delete LUT's
+    delete[] LUT_PULSE_OUT;
+    delete[] LUT_TND_OUT;
+}
+
+void Mixer::INIT() {
     //? Init each synth channel
     pulse1 = new Pulse();
     pulse2 = new Pulse();
@@ -24,19 +38,6 @@ Mixer::Mixer() {
     for (int j = 0; j < 203; j++) {
         LUT_TND_OUT[j] = 163.67f / ((24329.0f / (float)j) + 100.0f);
     }
-}
-
-Mixer::~Mixer() {
-    //? Destroy each synth channel
-    delete pulse1;
-    delete pulse2;
-    delete tri;
-    delete noise;
-    delete dmc;
-
-    //? Delete LUT's
-    delete[] LUT_PULSE_OUT;
-    delete[] LUT_TND_OUT;
 }
 
 float Mixer::MixdownNonLinear() {

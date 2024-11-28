@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <iostream>
 
+#include "../../include/apu.hh"
 #include "../../include/ricoh_2a03.hh"
 #include "../../include/nes.hh"
 
@@ -49,10 +50,6 @@ void APU::ChannelEnable() {
 //! /////////////////////// !//
 //!--    Frame Counter    --!//
 //! /////////////////////// !//
-FrameCounter::FrameCounter() {
-    
-}
-
 FrameCounter::~FrameCounter() {
     
 }

@@ -4,6 +4,8 @@
 
 //! This file will define what is common between the APU and CPU
 #include "../../include/ricoh_2a03.hh"
+#include "../../include/cpu.hh"
+#include "../../include/apu.hh"
 
 using namespace std;
 

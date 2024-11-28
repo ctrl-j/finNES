@@ -1,5 +1,6 @@
 #include <cstdint>
 
+#include "../../include/cpu.hh"
 #include "../../include/ricoh_2a03.hh"
 #include "../../include/nes.hh"
 

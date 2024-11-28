@@ -6,6 +6,8 @@
 #include "../../include/display.hh"
 #include "../../include/sound.hh"
 #include "../../include/ricoh_2a03.hh"
+#include "../../include/cpu.hh"
+#include "../../include/apu.hh"
 #include "../../include/memory.hh"
 #include "../../include/ppu.hh"
 
@@ -21,7 +23,7 @@ NES::NES() {
     //? Load "cartridge" into ROM
     //TODO
     //? Init Ricoh 2A03 (CPU+APU)
-    _CORE = new Ricoh_2A03();
+    _CORE = new Ricoh_2A03(false);
     _CPU = _CORE->cpu;
     _APU = _CORE->apu;
     //? Init PPU

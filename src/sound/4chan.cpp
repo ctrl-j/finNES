@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../../include/ricoh_2a03.hh"
+#include "../../include/apu.hh"
 
 using namespace std;
 
@@ -104,22 +105,6 @@ void Pulse::SetSweep(uint8_t flags) {
     //! Two conditions can cause muting in the sweep units
     //!     1. If the CURRENT PERIOD is less than 8, sweep unit mutes the channel
     //!     2. If the TARGET PERIOD is EVER greater than $7FF, sweep unit mutes the channel
-}
-
-Pulse::Pulse() {
-
-}
-
-Triangle::Triangle() {
-
-}
-
-Noise::Noise() {
-
-}
-
-DMC::DMC() {
-
 }
 
 Pulse::~Pulse() {

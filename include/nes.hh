@@ -92,7 +92,7 @@ class CHR_ROM;
 class INST_ROM;
 class PROM;
 
-class iNES : public NES {
+class iNES : virtual public NES {
 protected:
     char* file_data = nullptr;
 
@@ -176,25 +176,25 @@ public:
 };
 
 
-class PRG_ROM : public iNES {
+class PRG_ROM : virtual public iNES {
 public:
     PRG_ROM();
     ~PRG_ROM();
 };
 
-class CHR_ROM : public iNES {
+class CHR_ROM : virtual public iNES {
 public:
     CHR_ROM();
     ~CHR_ROM();
 };
 
-class INST_ROM : public iNES {
+class INST_ROM : virtual public iNES {
 public:
     INST_ROM();
     ~INST_ROM();
 };
 
-class PROM : public iNES {
+class PROM : virtual public iNES {
 public:
     PROM();
     ~PROM();
