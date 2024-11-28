@@ -8,19 +8,17 @@ using namespace std;
 
 int test_main() {
 
-     VM = new NES();
+    VM = new NES();
     
     //? Init vertex data for the starting screen
-    vector<int> x_tri_1 = {200, 300, 500};
-    vector<int> y_tri_1 = {200, 200, 100};
+    float v[] = {
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        0.0f, 0.5f, 0.0f
+    };
 
-    vector<int> x_tri_2 = {400, 600, 500};
-    vector<int> y_tri_2 = {200, 200, 100};
-
-    vector<float> tri1 = VM->_VID_OUT->PxToNDC_Tri(x_tri_1, y_tri_1);
-    vector<float> tri2 = VM->_VID_OUT->PxToNDC_Tri(x_tri_2, y_tri_2);
-
-    VM->_VID_OUT->verts = new float[18];
+    VM->_VID_OUT->verts = v;
+    VM->_VID_OUT->vertsN = 3;
 
     int GUI_SCENE_STATUS = VM->_VID_OUT->Scene();
     cout << "GUI SCENE EXIT CODE: " << GUI_SCENE_STATUS << "\n";

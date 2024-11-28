@@ -10,15 +10,28 @@ using namespace std;
 
 Mixer::~Mixer() {
     //? Destroy each synth channel
-    delete pulse1;
-    delete pulse2;
-    delete tri;
-    delete noise;
-    delete dmc;
-
+    if (pulse1 != NULL) {
+        delete pulse1;
+    }
+    if (pulse2 != NULL) {
+        delete pulse2;
+    }
+    if (tri != NULL) {
+        delete tri;
+    }
+    if (noise != NULL) {
+        delete noise;
+    }
+    if (dmc != NULL) {
+        delete dmc;
+    }
     //? Delete LUT's
-    delete[] LUT_PULSE_OUT;
-    delete[] LUT_TND_OUT;
+    if (LUT_PULSE_OUT != NULL) {
+        delete[] LUT_PULSE_OUT;
+    }
+    if (LUT_TND_OUT != NULL) {
+        delete[] LUT_TND_OUT;
+    }
 }
 
 void Mixer::INIT() {

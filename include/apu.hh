@@ -80,8 +80,8 @@ class Mixer : virtual public APU {
         float (Mixer::*MIX_FUNC)(); //? Function pointer for current mixdown mode
 
         float pulse_out, tnd_out, output_vol;
-        float* LUT_TND_OUT = nullptr;
-        float* LUT_PULSE_OUT = nullptr;
+        float* LUT_TND_OUT;
+        float* LUT_PULSE_OUT;
         vector<uint8_t> vols;
 
         Pulse* pulse1;

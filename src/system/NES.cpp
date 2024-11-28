@@ -36,14 +36,24 @@ NES::NES() {
 
 NES::~NES() {
     //? Destroy all system objects, if they still exist
-    delete _DATA;
-    delete _VID_OUT;
-    delete _AUD_OUT;
-    delete _MEM;
-    delete _CORE;
-    delete _CPU; // This and
-    delete _APU; // this are redundant, but fu*k you :0
-    delete _PPU;
+    if (_CORE != NULL) {
+        delete _CORE;
+    }
+    if (_DATA != NULL) {
+        delete _DATA;
+    }
+    if (_MEM != NULL) {
+        delete _MEM;
+    }
+    if (_PPU != NULL) {
+        delete _PPU;
+    }
+    if (_VID_OUT != NULL) {
+        delete _VID_OUT;
+    }
+    if (_AUD_OUT != NULL) {
+        delete _AUD_OUT;
+    }
 }
 
 u8 NES::PowerOn(const char* init_code_filepath) {

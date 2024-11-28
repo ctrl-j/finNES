@@ -54,7 +54,7 @@ Display::Display() {
     glfwSetWindowSizeCallback(window, window_size_callback);
 
     //? Load shader sources, compile+link to shader program
-    LoadShaders((char*)"resource/vertex_shader.txt", (char*)"resource/fragment_shader.txt");
+    LoadShaders((char*)"src/vertex_shader.txt", (char*)"src/fragment_shader.txt");
 }
 
 Display::~Display() {
@@ -78,7 +78,7 @@ int Display::Scene() {
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertsN, verts, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertsN * 3, verts, GL_STATIC_DRAW);
     //? Set vertex attribute pointers
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -102,18 +102,18 @@ int Display::Scene() {
     return 0;
 }
 
-void Display::ProcessInput() {
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
-
 void Display::Render() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(current_shader_program);
     glBindVertexArray(current_vao);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, vertsN);
+}
+
+void Display::ProcessInput() {
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
 }
 
 vector<vector<float>> Display::PxToNDC_Rect(int x, int y, int w, int h) {
