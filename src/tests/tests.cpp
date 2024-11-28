@@ -12,9 +12,9 @@ int test_main() {
     
     //? Init vertex data for the starting screen
     float v[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f
+        -1.0f, 1.0f, 0.0f,
+        -1.0f, -1.0f, 0.0f,
+        0.4222f, 1.0f, 0.0f
     };
 
     VM->_VID_OUT->verts = v;

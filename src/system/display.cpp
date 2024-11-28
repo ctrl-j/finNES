@@ -29,7 +29,7 @@ Display::Display() {
 
     //? Creates 640x480 windowed mode window, sets it in context
     monitor = glfwGetPrimaryMonitor();
-    window = glfwCreateWindow(640, 480, "finNES v0.1", NULL, NULL);
+    window = glfwCreateWindow(900 * 2, 480 * 2, "finNES v0.1", NULL, NULL);
     if (window == NULL) {
         cout << "*** GLFW ERROR: Failed to create GLFW window. Exiting... ***\n";
         return;
@@ -46,7 +46,7 @@ Display::Display() {
     } 
 
     //? Tell GLFW what to show in the viewport
-    glViewport(0, 0, window_width * 2, window_height * 2);
+    glViewport(0, 0, window_width, window_height);
 
     //? Set GLFW callback functions
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -82,7 +82,6 @@ int Display::Scene() {
     //? Set vertex attribute pointers
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
 
     //? Main window loop
     while (!glfwWindowShouldClose(window))
