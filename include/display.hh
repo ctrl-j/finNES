@@ -1,13 +1,14 @@
 #pragma once
-#include <GLFW/glfw3.h>
+#include <Fl/Fl.H>
 #include <vector>
+
+#include "gui.h"
 
 using namespace std;
 
 class Display {
 public:
-    GLFWmonitor* monitor;
-    GLFWwindow* window;
+    GUI* gui;
     int window_width;
     int window_height;
     unsigned int current_shader_program, current_vao, current_vbo;
@@ -18,10 +19,10 @@ public:
     Display();
     ~Display();
 
-    GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
+    // GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
     int Scene();
-    void Render();
-    void ProcessInput();
+    // void Render();
+    // void ProcessInput();
     
     //? Converts pixel vertices to Normalized Device Coordinate vertices
     vector<vector<float>> PxToNDC_Rect(int x, int y, int w, int h);
@@ -37,8 +38,8 @@ public:
 //! MUST BE ASSIGNED AT INIT
 //! !!!!!!!!!!!!!!!!!!!!!!!!!!
 //* Called when window is requested to close; useful for filtering unwanted close requests
-void window_close_callback(GLFWwindow*);
-//* Called whenever window is resized
-void window_size_callback(GLFWwindow* window, int w, int h);
-//* Called whenever window is resized, in order to handle changes in what is rendered
-void framebuffer_size_callback(GLFWwindow* window, int w, int h); 
+// void window_close_callback(GLFWwindow*);
+// //* Called whenever window is resized
+// void window_size_callback(GLFWwindow* window, int w, int h);
+// //* Called whenever window is resized, in order to handle changes in what is rendered
+// void framebuffer_size_callback(GLFWwindow* window, int w, int h); 

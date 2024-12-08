@@ -1,6 +1,9 @@
-//! GLAD packaged for OpenGL version 4.0
-#include "../../include/glad/glad.h"
-#include <GLFW/glfw3.h>
+// //! GLAD packaged for OpenGL version 4.0
+// #include "../../include/glad/glad.h"
+// #include <GLFW/glfw3.h>
+
+#include <FL/Fl.H>
+#include <FL/Fl_Double_Window.H>
 
 #include <cstdint>
 #include <fstream>
@@ -18,43 +21,87 @@ using namespace std;
 char infoLog[512];
 int InfoLogLength = 512;
 
+// Display::Display() {
+//     //? Initialize GLFW
+//     glfwInit();
+//     //? Tell GLFW to use v4.0 of OpenGL API
+//     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+//     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+//     //? Tell GLFW to use the "Core" profile (smaller subset of features w/o backwards compat.)
+//     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+//     //? Creates 640x480 windowed mode window, sets it in context
+//     monitor = glfwGetPrimaryMonitor();
+//     window = glfwCreateWindow(900 * 2, 480 * 2, "finNES v0.1", NULL, NULL);
+//     if (window == NULL) {
+//         cout << "*** GLFW ERROR: Failed to create GLFW window. Exiting... ***\n";
+//         return;
+//     }
+//     glfwMakeContextCurrent(window);
+//     glfwGetWindowSize(window, &window_width, &window_height);
+
+
+//     //? Initialize GLAD function pointers
+//     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+//     {
+//         cout << "*** GLAD ERROR: Failed to initialize GLAD. Exiting...\n";
+//         return;
+//     } 
+
+//     //? Tell GLFW what to show in the viewport
+//     glViewport(0, 0, window_width, window_height);
+
+//     //? Set GLFW callback functions
+//     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+//     glfwSetWindowCloseCallback(window, window_close_callback);
+//     glfwSetWindowSizeCallback(window, window_size_callback);
+
+//     //? Load shader sources, compile+link to shader program
+//     LoadShaders((char*)"src/vertex_shader.txt", (char*)"src/fragment_shader.txt");
+// }
+
+// int Display::Scene() {
+//     unsigned int VBO, VAO;
+
+//     //? Generate Vertex Buffer Object, Vertex Array Object to store vertex attributes
+//     glGenBuffers(1, &VBO);
+//     glGenVertexArrays(1, &VAO);
+//     current_vao = VAO;
+//     current_vbo = VBO;
+
+//     // float vertices[] = {
+//     //     -1.0f, -0.5f, 0.0f,
+//     //     1.0f, -0.5f, 0.0f,
+//     //     0.0f,  0.5f, 0.0f
+//     // };
+
+//     glBindVertexArray(VAO);
+//     glBindBuffer(GL_ARRAY_BUFFER, VBO);
+//     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertsN * 3, verts, GL_STATIC_DRAW);
+//     //? Set vertex attribute pointers
+//     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+//     glEnableVertexAttribArray(0);
+
+//     //? Main window loop
+//     while (!glfwWindowShouldClose(window))
+//     {
+//         //? Input commands
+//         ProcessInput();
+
+//         //? Rendering commands
+//         Render();
+    
+//         //? GLFW commands
+//         glfwPollEvents();           //? Check and call GLFW events
+//         glfwSwapBuffers(window);    //? Swap window framebuffer
+//     }
+
+//     glfwTerminate();
+//     return 0;
+// }
+
 Display::Display() {
-    //? Initialize GLFW
-    glfwInit();
-    //? Tell GLFW to use v4.0 of OpenGL API
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    //? Tell GLFW to use the "Core" profile (smaller subset of features w/o backwards compat.)
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    //? Creates 640x480 windowed mode window, sets it in context
-    monitor = glfwGetPrimaryMonitor();
-    window = glfwCreateWindow(900 * 2, 480 * 2, "finNES v0.1", NULL, NULL);
-    if (window == NULL) {
-        cout << "*** GLFW ERROR: Failed to create GLFW window. Exiting... ***\n";
-        return;
-    }
-    glfwMakeContextCurrent(window);
-    glfwGetWindowSize(window, &window_width, &window_height);
-
-
-    //? Initialize GLAD function pointers
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        cout << "*** GLAD ERROR: Failed to initialize GLAD. Exiting...\n";
-        return;
-    } 
-
-    //? Tell GLFW what to show in the viewport
-    glViewport(0, 0, window_width, window_height);
-
-    //? Set GLFW callback functions
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetWindowCloseCallback(window, window_close_callback);
-    glfwSetWindowSizeCallback(window, window_size_callback);
-
-    //? Load shader sources, compile+link to shader program
-    LoadShaders((char*)"src/vertex_shader.txt", (char*)"src/fragment_shader.txt");
+    gui = new GUI();
 }
 
 Display::~Display() {
@@ -62,58 +109,24 @@ Display::~Display() {
 }
 
 int Display::Scene() {
-    unsigned int VBO, VAO;
 
-    //? Generate Vertex Buffer Object, Vertex Array Object to store vertex attributes
-    glGenBuffers(1, &VBO);
-    glGenVertexArrays(1, &VAO);
-    current_vao = VAO;
-    current_vbo = VBO;
 
-    // float vertices[] = {
-    //     -1.0f, -0.5f, 0.0f,
-    //     1.0f, -0.5f, 0.0f,
-    //     0.0f,  0.5f, 0.0f
-    // };
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertsN * 3, verts, GL_STATIC_DRAW);
-    //? Set vertex attribute pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    //? Main window loop
-    while (!glfwWindowShouldClose(window))
-    {
-        //? Input commands
-        ProcessInput();
-
-        //? Rendering commands
-        Render();
-    
-        //? GLFW commands
-        glfwPollEvents();           //? Check and call GLFW events
-        glfwSwapBuffers(window);    //? Swap window framebuffer
-    }
-
-    glfwTerminate();
     return 0;
 }
 
-void Display::Render() {
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+// void Display::Render() {
+//     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+//     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(current_shader_program);
-    glBindVertexArray(current_vao);
-    glDrawArrays(GL_TRIANGLES, 0, vertsN);
-}
+//     glUseProgram(current_shader_program);
+//     glBindVertexArray(current_vao);
+//     glDrawArrays(GL_TRIANGLES, 0, vertsN);
+// }
 
-void Display::ProcessInput() {
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
+// void Display::ProcessInput() {
+//     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+//         glfwSetWindowShouldClose(window, true);
+// }
 
 vector<vector<float>> Display::PxToNDC_Rect(int x, int y, int w, int h) {
     //? Creates 3x4 vector for rectangle vertices
@@ -156,96 +169,96 @@ vector<float> Display::PxToNDC_Tri(vector<int> x, vector<int> y) {
     return triVerts;
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
-    //? Set the viewport to the new window size
-    glViewport(0, 0, w, h);
-}
+// void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
+//     //? Set the viewport to the new window size
+//     glViewport(0, 0, w, h);
+// }
 
-void window_close_callback(GLFWwindow* window)
-{
-    //? This can be used to filter out unwanted close requests
-    //if (!time_to_close)
-    //    glfwSetWindowShouldClose(window, GLFW_FALSE);
-}
+// void window_close_callback(GLFWwindow* window)
+// {
+//     //? This can be used to filter out unwanted close requests
+//     //if (!time_to_close)
+//     //    glfwSetWindowShouldClose(window, GLFW_FALSE);
+// }
 
-void window_size_callback(GLFWwindow* window, int w, int h)
-{
+// void window_size_callback(GLFWwindow* window, int w, int h)
+// {
 
-}
+// }
 
-GLuint Display::LoadShaders(const char * vertex_file_path,const char * fragment_file_path) {
-    GLint Result = GL_FALSE;
-    unsigned int vertexShader, fragmentShader, shaderProgram;
-    string vertexShaderSource, fragmentShaderSource;
+// GLuint Display::LoadShaders(const char * vertex_file_path,const char * fragment_file_path) {
+//     GLint Result = GL_FALSE;
+//     unsigned int vertexShader, fragmentShader, shaderProgram;
+//     string vertexShaderSource, fragmentShaderSource;
 
-    //? Open the source files
-    ifstream vertexSrcStream(vertex_file_path, ios::in);
-    ifstream fragmentSrcStream(fragment_file_path, ios::in);
-    //? Read VERTEX SHADER source code
-	ifstream VertexShaderStream(vertex_file_path, ios::in);
-	if(VertexShaderStream.is_open()){
-		stringstream sstr;
-		sstr << VertexShaderStream.rdbuf();
-		vertexShaderSource = sstr.str();
-		VertexShaderStream.close();
-	}else{
-		cout << "*** ERROR IN LoadShaders(): unable to open " << vertex_file_path << " for vertex/fragment shader source file. Exiting... ***\n";
-		getchar();
-		return 0;
-	}
+//     //? Open the source files
+//     ifstream vertexSrcStream(vertex_file_path, ios::in);
+//     ifstream fragmentSrcStream(fragment_file_path, ios::in);
+//     //? Read VERTEX SHADER source code
+// 	ifstream VertexShaderStream(vertex_file_path, ios::in);
+// 	if(VertexShaderStream.is_open()){
+// 		stringstream sstr;
+// 		sstr << VertexShaderStream.rdbuf();
+// 		vertexShaderSource = sstr.str();
+// 		VertexShaderStream.close();
+// 	}else{
+// 		cout << "*** ERROR IN LoadShaders(): unable to open " << vertex_file_path << " for vertex/fragment shader source file. Exiting... ***\n";
+// 		getchar();
+// 		return 0;
+// 	}
 
-    //? Read the FRAGMENT SHADER source code
-	ifstream FragmentShaderStream(fragment_file_path, ios::in);
-	if(FragmentShaderStream.is_open()){
-		stringstream sstr;
-		sstr << FragmentShaderStream.rdbuf();
-		fragmentShaderSource = sstr.str();
-		FragmentShaderStream.close();
-	}
+//     //? Read the FRAGMENT SHADER source code
+// 	ifstream FragmentShaderStream(fragment_file_path, ios::in);
+// 	if(FragmentShaderStream.is_open()){
+// 		stringstream sstr;
+// 		sstr << FragmentShaderStream.rdbuf();
+// 		fragmentShaderSource = sstr.str();
+// 		FragmentShaderStream.close();
+// 	}
 
-    //? Compilie the vertex shader
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    char const * VertexSourcePointer = vertexShaderSource.c_str();
-    glShaderSource(vertexShader, 1, &VertexSourcePointer, NULL);
-    glCompileShader(vertexShader);  
-    //! Check if VERTEX SHADER compiled successfully
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &Result);
-    if (!Result){
-        glGetShaderInfoLog(vertexShader, InfoLogLength, NULL, infoLog);
-        std::cout << "*** ERROR IN LoadShaders(): unable to compile VERTEX SHADER source. Exiting... ***\n" << infoLog << std::endl;
-    }
+//     //? Compilie the vertex shader
+//     vertexShader = glCreateShader(GL_VERTEX_SHADER);
+//     char const * VertexSourcePointer = vertexShaderSource.c_str();
+//     glShaderSource(vertexShader, 1, &VertexSourcePointer, NULL);
+//     glCompileShader(vertexShader);  
+//     //! Check if VERTEX SHADER compiled successfully
+//     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &Result);
+//     if (!Result){
+//         glGetShaderInfoLog(vertexShader, InfoLogLength, NULL, infoLog);
+//         std::cout << "*** ERROR IN LoadShaders(): unable to compile VERTEX SHADER source. Exiting... ***\n" << infoLog << std::endl;
+//     }
 
-    //? Compile the fragment (pixel) shader
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    char const * FragmentSourcePointer = fragmentShaderSource.c_str();
-    glShaderSource(fragmentShader, 1, &FragmentSourcePointer, NULL);
-    glCompileShader(fragmentShader);
-    //! Check if FRAGMENT SHADER compiled successfully
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &Result);
-    if (!Result){
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "*** ERROR IN LoadShaders(): unable to compile FRAGMENT SHADER source. Exiting... ***\n" << infoLog << std::endl;
-    }
+//     //? Compile the fragment (pixel) shader
+//     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+//     char const * FragmentSourcePointer = fragmentShaderSource.c_str();
+//     glShaderSource(fragmentShader, 1, &FragmentSourcePointer, NULL);
+//     glCompileShader(fragmentShader);
+//     //! Check if FRAGMENT SHADER compiled successfully
+//     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &Result);
+//     if (!Result){
+//         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+//         std::cout << "*** ERROR IN LoadShaders(): unable to compile FRAGMENT SHADER source. Exiting... ***\n" << infoLog << std::endl;
+//     }
     
-    //? Create shader program, linking the two shader objects
-    shaderProgram = glCreateProgram();
-    current_shader_program = shaderProgram;
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    //! Check if shader program linked successfully
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &Result);
-    if (!Result) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        cout << "*** ERROR IN LoadShaders(): unable to link vertex+fragment shaders. Exiting... ***\n" << infoLog;
-    }
+//     //? Create shader program, linking the two shader objects
+//     shaderProgram = glCreateProgram();
+//     current_shader_program = shaderProgram;
+//     glAttachShader(shaderProgram, vertexShader);
+//     glAttachShader(shaderProgram, fragmentShader);
+//     glLinkProgram(shaderProgram);
+//     //! Check if shader program linked successfully
+//     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &Result);
+//     if (!Result) {
+//         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+//         cout << "*** ERROR IN LoadShaders(): unable to link vertex+fragment shaders. Exiting... ***\n" << infoLog;
+//     }
 
-    glDetachShader(shaderProgram, vertexShader);
-	glDetachShader(shaderProgram, fragmentShader);
+//     glDetachShader(shaderProgram, vertexShader);
+// 	glDetachShader(shaderProgram, fragmentShader);
 
-    //? Delete old shader objects now that they have been linked in a program
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader); 
+//     //? Delete old shader objects now that they have been linked in a program
+//     glDeleteShader(vertexShader);
+//     glDeleteShader(fragmentShader); 
 
-    return shaderProgram;
-}
+//     return shaderProgram;
+// }
