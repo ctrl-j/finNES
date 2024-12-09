@@ -1,5 +1,6 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
+#include <Fl/Fl_Box.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Return_Button.H>
 
@@ -25,14 +26,23 @@ const char* IST_Strings[7] = {
     "WRITE_ERROR"
 };
 
-int main() {
+int main(int argc, char** argv) {
     DISPLAY = new Display();
+
+    DISPLAY->gui->wins->end();
+    DISPLAY->gui->wins->show(argc, argv);
+    
     return Fl::run();
 }
 
 GUI::GUI() {
-    wins = new Fl_Double_Window(600, 800, "finNES v0.2");
-
+    wins = new Fl_Double_Window(800, 600, "finNES v0.2");
+    msg_box = new Fl_Box(20, 40, 300, 100, "Fuck her right\nin the pussy");
+    
+    msg_box->box(FL_UP_BOX);
+    msg_box->labelfont(FL_BOLD+FL_ITALIC);
+    msg_box->labelsize(36);
+    msg_box->labeltype(FL_SHADOW_LABEL);
 
     // #ifdef TEST
     //     //? Run appropriate test stuff

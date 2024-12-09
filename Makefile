@@ -1,30 +1,27 @@
-CC = g++
-CFLAGS = -std=c++20 -Wall -Werror -g -pedantic
+# Compiler
+CXX = $(shell fltk-config --cxx)
+# Debug level
+DEBUG = -g
+# Compiler arguments
+CXXFLAGS = $(shell fltk-config --use-gl --use-images --cxxflags ) -I.
 
-SOURCES = $(wildcard *.cpp) $(wildcard */*/*.cpp)
-#SOURCES = src/main.cpp src/display.cpp src/glad.c
+# Linker arguments (library locations)
+# The "fltk-config" command loads the necessary libraries, as long as they are installed
+LDFLAGS  = $(shell fltk-config --use-gl --use-images --ldflags )
+# Linker arguments (library names)
+LDSTATIC = $(shell fltk-config --use-gl --use-images --ldstaticflags )
+# Add references to the Cg and TIFF libraries, since we use those in our pipeline
+LDSTATIC += -lCg -lCgGL -ltiff
 
-INCLUDE_PATHS = -I. -I/include
+# Name of compiled application/output
+TARGET = finnes
+# Get list of all the cpp source files (if in a subdirectory named "src")
+SRCS = $(wildcard src/*/*.cpp)
 
-# Windows library/include locations
-ifeq ($(OS), Windows_NT)
-	LDFLAGS = -LC:/msys64/ucrt64/lib -LC:/msys64/ucrt64/lib/ctrlj
-	LDLIBS = -lraylib -lopengl32 -lgdi32 -lwinmm -static -lpthread 
-	INCLUDE_PATHS += -IC:/msys64/ucrt64/include -IC:/msys64/ucrt64/include/ctrlj
-# Linux/WSL library/include locations
-else
-	LDFLAGS = -L/usr/local/lib
-	LDLIBS = -lglfw3 -lGL -lm -lpthread -ldl -lrt -lX11 -lXrandr -lXi
-	INCLUDE_PATHS += -I/usr/local/include
+# Rule to compile the project using FLTK-specified options
+$(TARGET): $(SRCS)
+	$(CXX) $(CXXFLAGS) $(DEBUG) $^ -o $@ $(LDSTATIC)
 
-endif
-
-all: finNES
-
-finNES: $(SOURCES)
-	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDE_PATHS) $(LDFLAGS) $(LDLIBS)
-
-.PHONY: test
-
-test: $(SOURCES) src/system/glad.c
-	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDE_PATHS) $(LDFLAGS) $(LDLIBS) -DTEST
+# Rule to delete the project executable, surpresses any errors returned (ie exectuable doesn't exist)
+clean: $(TARGET)
+	rm -f $(TARGET) 2> /dev/null
