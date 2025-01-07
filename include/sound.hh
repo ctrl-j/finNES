@@ -5,6 +5,7 @@
 
 #include "nes.hh"
 #include "ricoh_2a03.hh"
+#include "apu.hh"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ typedef uint16_t u16;
 
 class Sound {
 private:
-    APU* _AUD_OUT;
+    Mixer* _AUD_OUT;
 
 public:
     u8 volume_global;

@@ -13,8 +13,12 @@ using namespace std;
 //? Internal methods
 APU::~APU(){
     //? Destroy APU object members
-    delete MXR;
-    delete FMCNT;
+    if (MXR != NULL) {
+        delete MXR;
+    }
+    if (FMCNT != NULL) {
+        delete FMCNT;
+    }
 }
 
 void APU::INIT() {

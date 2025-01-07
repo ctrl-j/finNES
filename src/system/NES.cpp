@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include "../../include/nes.hh"
-#include "../../include/display.hh"
 #include "../../include/sound.hh"
 #include "../../include/ricoh_2a03.hh"
 #include "../../include/cpu.hh"
@@ -18,20 +17,26 @@ NES* VM = NULL;
 NES::NES() {
     //? Don't init start file yet, that is the final step >:)
     _DATA = NULL;
+
     //? Init memory
     _MEM = new Memory();
+
     //? Load "cartridge" into ROM
     //TODO
+
     //? Init Ricoh 2A03 (CPU+APU)
     _CORE = new Ricoh_2A03(false);
     _CPU = _CORE->cpu;
     _APU = _CORE->apu;
+
     //? Init PPU
     _PPU = new PPU();
+
     //? Init sound
     _AUD_OUT = new Sound();
+    
     //? Init display GUI
-    _VID_OUT = new Display();
+    //TODO
 }
 
 NES::~NES() {
@@ -48,9 +53,9 @@ NES::~NES() {
     if (_PPU != NULL) {
         delete _PPU;
     }
-    if (_VID_OUT != NULL) {
-        delete _VID_OUT;
-    }
+    // if (_VID_OUT != NULL) {
+    //     delete _VID_OUT;
+    // }
     if (_AUD_OUT != NULL) {
         delete _AUD_OUT;
     }

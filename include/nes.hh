@@ -3,7 +3,6 @@
 #include <cstdint>
 #include <fstream>
 
-#include "display.hh"
 class Sound;
 #include "sound.hh"
 #include "ricoh_2a03.hh"
@@ -35,7 +34,6 @@ class iNES;
 class NES {
 public:
     iNES* _DATA;
-    Display* _VID_OUT;
     Sound* _AUD_OUT;
     
     Memory* _MEM;
