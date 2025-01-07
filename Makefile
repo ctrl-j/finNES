@@ -14,17 +14,11 @@ LDSTATIC = $(shell fltk-config --use-gl --use-images --ldstaticflags )
 LDSTATIC += -lCg -lCgGL -ltiff
 
 # Name of compiled application/output
-<<<<<<< HEAD
 TARGET = pipeline
 # Get list of all the cpp source files (if in a subdirectory named "src")
 SRCS = $(wildcard src/*/*.cpp)
 # Add to the list a reference to the GUI source file (if located in root of project)
 SRCS += gui.cxx
-=======
-TARGET = finnes
-# Get list of all the cpp source files (if in a subdirectory named "src")
-SRCS = $(wildcard src/*/*.cpp)
->>>>>>> d81e3e93883facff6eb87523e894bd7b81644ac0
 
 # Rule to compile the project using FLTK-specified options
 $(TARGET): $(SRCS)
